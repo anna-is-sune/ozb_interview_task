@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+{% block title %}Products{% endblock %}
+
+{% block body %}
+
+{% include('navbar.html.twig') %}
+<style>
+.product-list {
+    margin-top: 1em;
+    padding: 1em 0em 0em 0em;
+    border: 1px solid white;
+    border-radius: 1em;
+}
+
+.product-list .row {
+    margin-bottom: 1em;
+    justify-content: space-around;
+}
+
+.product-list .card {
+    border: white 1px solid;
+}
+
+.product-list .card .card-img {
+    width: 100%;
+    height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+.product-pagination {
+    margin-top: 1em;
+}
+
+ul.pagination {
+    justify-content: center;
+}
+
+.sorted {
+    display:flex;
+    justify-content: right;
+}
+
+.sorted > a {
+    margin-top: 1em;
+    display: inline-block;
+    padding: 0em 1em;
+    color: white;
+    text-decoration: none;
+    border-top: 1px white solid;
+    border-bottom: 1px white solid;
+    border-right: 1px white solid;
+    font-weight: bold;
+}
+
+.sorted > a.sortable {
+    background-color: #CCC;
+}
+
+.sorted > a.asc,
+.sorted > a.desc
+{
+    background-color: #0d6efd;
+}
+
+.sorted > :first-child {
+    border-left: 1px white solid;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.sorted > :last-child {
+    border-radius: 0px 5px 5px 0px;
+}
+
+</style>
+
+<div class="sorted">
+{{ knp_pagination_sortable(pagination, 'Price', 'p.price', {}, {}, '@KnpPaginator/Pagination/bootstrap_v5_bi_sortable_link.html.twig') }}
+{{ knp_pagination_sortable(pagination, 'Latest', 'p.created_at', {}, {}, '@KnpPaginator/Pagination/bootstrap_v5_bi_sortable_link.html.twig') }}
+</div>
+
+<div class="container product-list">
+{% for product in pagination %}
+{% if (loop.index - 1) is divisible by(5) %}
+    <div class="row">
+{% endif %}
+        <div class="col col-md-2">
+            <div class="card">
+                <div class="card-img card-img-top" style="background-image:url(asset/product/thumbnail/{{product.photos.thumbnail.filename}})" ></div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">&#163;{{ (product.price / 100)|number_format(2, '.', ',')}}</h6>
+                    <a href="/product/{{product.id}}" class="btn btn-primary">View Product</a>
+                </div>
+            </div> 
+        </div>
+{% if (loop.index) is divisible by(5) %}
+    </div>
+{% endif %}
+{% endfor %}
+</div> 
+<div class="product-pagination">
+{{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}    
+</div>
+{% endblock %}
