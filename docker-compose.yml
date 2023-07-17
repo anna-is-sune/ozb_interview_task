@@ -70,11 +70,11 @@ services:
     volumes:
       - ./data:/var/lib/mysql/
       - type: bind
-        source: ./my.cnf
+        source: ./mysql/my.cnf
         target: /etc/mysql/conf.d/my.cnf
         read_only: true
       - type: bind
-        source: ./init.sql
+        source: ./mysql/init.sql
         target: /docker-entrypoint-initdb.d/init.sql
         read_only: true
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
