@@ -9,24 +9,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Kernel;
 use App\Entity\Product;
 use App\Utilities\ImageOptimiser;
+use App\Utilities\ImageHelper;
 
 use Knp\Component\Pager\PaginatorInterface;
 
 class ProductController extends AbstractController
 {
-    private string $project_dir;
-
     private ImageOptimiser $imageOptimiser;
+    private ImageHelper $imageHelper;
 
     const PAGE_SIZE = 10;
 
-    public function __construct(Kernel $kernel) 
+    public function __construct(ImageHelper $imageHelper) 
     {
-        $this->project_dir = $kernel->getProjectDir();
         $this->imageOptimiser = new ImageOptimiser();
+        $this->imageHelper = $imageHelper;
     }
 
     #[Route('/products', name: 'app_product', methods: ['GET'])]
@@ -61,7 +60,7 @@ class ProductController extends AbstractController
             'name'          => $product->getName(),
             'price'         => $product->getPrice(),
             'description'   => $product->getDescription(),
-            'image'         => '../asset/product/original/' . $image['filename']
+            'image'         => '../' . $this->imageHelper->getServerPath($image['filename'], 'original')
         ]);
     }
 

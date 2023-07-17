@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Kernel;
 use App\Entity\Product;
+use App\Utilities\ImageHelper;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -14,13 +14,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 
 class ProductCrudController extends AbstractCrudController
 {
-    const UPLOAD_PRODUCT_DIR = 'public/asset/product';
+    private ImageHelper $imageHelper;
 
-    private string $project_dir;
-
-    public function __construct(Kernel $kernel)
+    public function __construct(ImageHelper $imageHelper)
     {
-        $this->project_dir = $kernel->getProjectDir();
+        $this->imageHelper = $imageHelper;
     }
 
     public static function getEntityFqcn(): string
@@ -35,7 +33,7 @@ class ProductCrudController extends AbstractCrudController
             MoneyField::new('price')->setCurrency('GBP'),
             TextEditorField::new('description'),
             ImageField::new('image_uploaded')
-                ->setUploadDir(self::UPLOAD_PRODUCT_DIR.'/original/')
+                ->setUploadDir($this->imageHelper->getPublicPath('', 'original'))
                 ->setUploadedFileNamePattern('[timestamp].[extension]')
         ];
     }

@@ -7,6 +7,7 @@ parameters:
     mailer_enabled: '%env(MAILER_ENABLED)%'
     sender_email: '%env(MAILER_SENDER_EMAIL)%'
     sender_name: '%env(MAILER_SENDER_NAME)%'
+    product_image_path: '%env(PRODUCT_IMAGE_PATH)%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -21,6 +22,8 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

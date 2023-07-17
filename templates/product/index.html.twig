@@ -20,7 +20,7 @@
     {% endif %}
             <div class="col col-md-2">
                 <div class="card">
-                    <div class="card-img card-img-top" style="background-image:url(asset/product/thumbnail/{{product.photos.thumbnail.filename}})" ></div>
+                    <div class="card-img card-img-top" style="background-image:url({{ product_image_path }}thumbnail/{{product.photos.thumbnail.filename}})" ></div>
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">&#163;{{ (product.price / 100)|number_format(2, '.', ',')}}</h6>

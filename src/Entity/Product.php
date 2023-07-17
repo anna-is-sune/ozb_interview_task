@@ -36,19 +36,10 @@ class Product
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deleted_at = null;
 
-    const ASSET_PATH = 'asset/product/';
-
     public function getImageUploaded() : ?string 
     {
-        $image = $this->getImage();
-        if (isset($image['filename'])) 
-        {
-            return self::ASSET_PATH . 'thumbnail/' . $image['filename'];
-        } 
-        else 
-        {
-            return null;
-        }
+        $thumbnail = $this->getThumbnail();
+        return $thumbnail['relative_url'] ?? null;
     }
 
     public function setImageUploaded(?string $image) : void

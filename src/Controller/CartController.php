@@ -10,8 +10,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Utilities\ImageHelper;
+
 class CartController extends AbstractController
 {
+    private ImageHelper $imageHelper;
+
+    public function __construct(ImageHelper $imageHelper) 
+    {
+        $this->imageHelper = $imageHelper;
+    }
+
+
     #[Route('/cart', name: 'app_cart', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -82,6 +92,8 @@ class CartController extends AbstractController
 
     private function getCartFromSession(array $products, array $currentCart) : array
     {
+        
+
         $items = [];
         $total = 0;
         foreach($products as $product) {
@@ -96,7 +108,7 @@ class CartController extends AbstractController
                 'qty'           => $productQty,
                 'unitPrice'     => $productUnitPrice,
                 'price'         => $productPrice,
-                'thumbnail'     => 'asset/product/thumbnail/' . $product['photos']['thumbnail']['filename']
+                'thumbnail'     => $this->imageHelper->getServerPath($product['photos']['thumbnail']['filename'], 'thumbnail')
             ];
         }
 

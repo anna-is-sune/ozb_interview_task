@@ -1,7 +1,9 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bootstrap_4_layout.html.twig']
-
+    globals:
+        app_environment: '%env(APP_ENV)%'
+        product_image_path: '%env(PRODUCT_IMAGE_PATH)%'
 when@test:
     twig:
         strict_variables: true
