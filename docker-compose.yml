@@ -68,13 +68,13 @@ services:
       MYSQL_PASSWORD: D0C7R1N3
       MYSQL_DATABASE: ozb
     volumes:
-      - ../mysql/data:/var/lib/mysql/
+      - ./data:/var/lib/mysql/
       - type: bind
-        source: ../mysql/my.cnf
+        source: ./my.cnf
         target: /etc/mysql/conf.d/my.cnf
         read_only: true
       - type: bind
-        source: ../mysql/init.sql
+        source: ./init.sql
         target: /docker-entrypoint-initdb.d/init.sql
         read_only: true
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
