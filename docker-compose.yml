@@ -63,9 +63,9 @@ services:
   database:
     image: mysql:8.0.33
     environment:
-      MYSQL_ROOT_PASSWORD: VP@55w0rd
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-}
       MYSQL_USER: doctrine
-      MYSQL_PASSWORD: D0C7R1N3
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
       MYSQL_DATABASE: ozb
     volumes:
       - ./data:/var/lib/mysql/
