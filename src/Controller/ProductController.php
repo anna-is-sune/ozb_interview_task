@@ -32,7 +32,10 @@ class ProductController extends AbstractController
     #[Route('/products', name: 'app_product', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        $user = $this->getUser();
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $pagination = $paginator->paginate(
             $entityManager->getRepository(Product::class)->list(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -45,6 +48,10 @@ class ProductController extends AbstractController
     #[Route('/product/{id}', name: 'app_product_by_id', methods: ['GET'])]
     public function detail(EntityManagerInterface $entityManager, int $id): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $product = $entityManager->getRepository(Product::class)->find($id);
 
         $image = $product->getImage();

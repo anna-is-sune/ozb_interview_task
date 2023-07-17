@@ -7,36 +7,77 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
 {
     #[Route('/cart', name: 'app_cart', methods: ['GET'])]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $session = $request->getSession();
         $currentCart = json_decode($session->get('cart', '[]'), true);
         $product_ids = array_keys($currentCart);
         $products = $entityManager->getRepository(Product::class)->findByIds($product_ids);
 
-        return $this->render('cart/index.html.twig', $this->getCartFromSession($products, $currentCart));
+        $response = new JsonResponse();
+        $response->setData($this->getCartFromSession($products, $currentCart));
+        return $response;
     }
 
-    #[Route('/cart/{id}', name: 'app_add_to_cart', methods: ['POST'])]
-    public function add(Request $request, EntityManagerInterface $entityManager, int $id) : Response 
+    #[Route('/cart/{id}', name: 'app_add_to_cart', methods: ['POST', 'PUT', 'DELETE'])]
+    public function add(Request $request, EntityManagerInterface $entityManager, int $id) : JsonResponse 
     {
-        $qty = $request->request->get('qty');
-
+        if ($request->getMethod() !== 'DELETE') {
+            $content = json_decode($request->getContent());
+            $qty = intval($content->qty);
+            
+        }
+        
         $session = $request->getSession();
         $currentCart = json_decode($session->get('cart', '[]'), true);
         $currentQty = $currentCart[$id] ?? 0;
-        $currentCart[$id] = $currentQty + $qty;
-        $product_ids = array_keys($currentCart);
-        $products = $entityManager->getRepository(Product::class)->findByIds($product_ids);
-
+        $product = $entityManager->getRepository(Product::class)->find($id);
+        switch($request->getMethod()) {
+            case 'POST':
+                $currentCart[$id] = $currentQty + $qty;
+                $output = [
+                    'action' => 'ADD', 
+                    'product' => [
+                        'id'    => $product->getId(), 
+                        'name'  => $product->getName()
+                    ]
+                ];
+                break;
+            case 'PUT':
+                $currentCart[$id] = $qty;
+                $output = [
+                    'action' => 'UPDATE', 
+                    'product' => [
+                        'id'    => $product->getId(), 
+                        'name'  => $product->getName(),
+                        'qty'   => $qty,
+                        'price' => $product->getPrice() * $qty
+                    ]
+                    ];
+                break;
+            case 'DELETE':
+                unset($currentCart[$id]);
+                $output = [
+                    'action' => 'DELETE',
+                    'product' => [
+                        'id'    => $product->getId(), 
+                        'name'  => $product->getName(),
+                    ]
+                ];
+                break;
+        }
+        
         $session->set('cart', json_encode($currentCart));
-        return $this->render('cart/index.html.twig', $this->getCartFromSession($products, $currentCart));
+
+        $response = new JsonResponse();
+        $response->setData($output);
+        return $response;
     }
 
     private function getCartFromSession(array $products, array $currentCart) : array

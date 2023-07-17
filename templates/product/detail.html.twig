@@ -25,12 +25,11 @@ h2.product-price {
                 <h2 class="product-price">
                     &#163;{{(price / 100)|number_format(2, '.', ',')}}
                 </h2>
-                <form id="add-to-cart" method="POST" action="../cart/{{id}}">
-                    <div class="input-group">
-                        <input type="number" class="form-control" name="qty" value="1" min="1" step="1" aria-describedby="button-add-to-cart">
-                        <button class="btn btn-primary" id="button-add-to-cart" type="submit">Add to cart</button>
-                    </div>
-                </form>
+                <div class="input-group" {{stimulus_controller('product-cart', { 'id': id })}} >
+                    <input type="number" class="form-control" name="qty" value="1" min="1" step="1" {{ stimulus_target('product-cart', 'qty') }} />
+                    <button class="btn btn-primary" id="button-add-to-cart" {{ stimulus_action('product-cart', 'addToCart') }}>Add to cart</button>
+                </div>
+                
             </div>
         </div>
         <p class="product-detail">
@@ -43,4 +42,5 @@ h2.product-price {
   </div>
 </div>
 
+{% include('cart.html.twig') %}
 {% endblock %}

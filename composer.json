@@ -36,7 +36,9 @@
         "symfony/property-info": "6.3.*",
         "symfony/runtime": "6.3.*",
         "symfony/security-bundle": "6.3.*",
+        "symfony/security-csrf": "6.3.*",
         "symfony/serializer": "6.3.*",
+        "symfony/stimulus-bundle": "^2.10",
         "symfony/string": "6.3.*",
         "symfony/translation": "6.3.*",
         "symfony/twig-bundle": "6.3.*",
@@ -45,6 +47,7 @@
         "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "6.3.*",
         "symfonycasts/verify-email-bundle": "^1.13",
+        "twbs/bootstrap": "^5.3",
         "twbs/bootstrap-icons": "^1.10",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
@@ -94,7 +97,8 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.3.*"
+            "require": "6.3.*",
+            "docker": true
         }
     },
     "require-dev": {

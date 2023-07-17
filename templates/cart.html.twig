@@ -1,0 +1,46 @@
+{% block body %}
+<div id="view-cart" class="collapse bg-light" {{stimulus_controller('cart') }} {{stimulus_action('cart', 'message', 'product-cart:message@window')|stimulus_action('cart', 'message', 'cart-list-item:message@window')}}>
+    <span id="cart-message" {{stimulus_target('cart', 'message')}}></span>
+    <template {{stimulus_target('cart', 'itemTemplate')}}>
+        <li class="list-group-item"  {{stimulus_target('cart', 'cartListItem')}} {{stimulus_controller('cart-list-item') }} {{ stimulus_action('cart-list-item', 'refresh', 'changed')}}>
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-3">
+                        <img class="img-fluid rounded-start" {{stimulus_target('cart-list-item', 'thumbnail')}}>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h5 class="card-title" {{ stimulus_target('cart-list-item', 'name')}}></h5>
+                            <div>
+                                <form>
+                                    <input name="id" type="hidden" {{ stimulus_target('cart-list-item', 'id')}} />
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" {{ stimulus_target('cart-list-item', 'unitPrice')}}></span>
+                                        <input name="qty" class="form-control form-control-lg" type="number" min="1" {{ stimulus_target('cart-list-item', 'qty')}}/>
+                                        <button class="btn btn-outline-secondary" type="button" name="edit" {{stimulus_action('cart-list-item', 'itemUpdate')}}>Edit</button>
+                                        <button class="btn btn-danger bi bi-trash" type="button" name="remove" {{stimulus_action('cart-list-item', 'itemRemove')}}></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" >
+                        <h4 class="card-body" style="text-align: end" {{ stimulus_target('cart-list-item', 'price')}}></h4>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </template>
+    <ul id="cart-list" class="list-group list-group-flush"  {{stimulus_target('cart', 'cartList')}} style="height: 80%; overflow-y: scroll">
+       
+    </ul>
+    <div id="cart-summary" >
+        <div class="total container">
+            <div class="row">
+                <div class="total-label col">Total</div>
+                <div class="total-price col" {{stimulus_target('cart','total')}}></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
