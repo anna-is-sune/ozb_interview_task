@@ -44,18 +44,17 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-/*
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('no-reply@ozb.com', 'OZB server'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-*/
-            $user->setIsVerified(true);
+
+            $isMailerEnabled = $this->getParameter('mailer_enabled') == 'true' ? TRUE : FALSE;
+            
+            if($isMailerEnabled) 
+            {
+                $this->sendEmail($user);
+            } 
+            else 
+            {
+                $user->setIsVerified(true);
+            }
             
             return $this->redirectToRoute('app_product');
         }
@@ -83,5 +82,16 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_register');
+    }
+
+    private function sendEmail(User $user) {
+        // generate a signed url and email it to the user
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address($this->getParameter('sender_email'), $this->getParameter('sender_name')))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+        );
     }
 }

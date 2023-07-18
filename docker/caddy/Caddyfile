@@ -9,8 +9,6 @@
 
 log
 
-redir / /login
-
 route {
     root * /srv/app/public
     mercure {

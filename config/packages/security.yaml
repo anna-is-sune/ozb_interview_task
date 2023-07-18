@@ -8,13 +8,9 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
-        app_admin_provider:
-            entity:
-                class: App\Entity\Admin
-                property: email
         all_users:
             chain:
-                providers: ['app_user_provider', 'app_admin_provider']
+                providers: ['app_user_provider']
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
@@ -25,10 +21,10 @@ security:
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
-                #path: app_logout
+                path: app_logout
                 # where to redirect after logout
                 target: app_login
-
+            entry_point: App\Security\AuthenticationEntryPoint
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
