@@ -69,6 +69,7 @@ services:
       MYSQL_DATABASE: ozb
     volumes:
       - ./data:/var/lib/mysql/
+      - ./backup:/home/
       - type: bind
         source: ./mysql/my.cnf
         target: /etc/mysql/conf.d/my.cnf
