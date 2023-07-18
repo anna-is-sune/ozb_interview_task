@@ -49,11 +49,15 @@ mysql -u doctrine -p ozb << /var/lib/mysql/{your file name}.sql
 ```
 
 # For Demonstration
-In `/example` folder, there is a `ozb_table.sql` file to can be import.
+In `.env` file, you can update `PRODUCT_IMAGE_PATH` to decide where should the uploaded images of the product should be saved. It should be under the `public` folder.
+
+In `/example` folder, 
+- `ozb_table.sql` file: included sample products in `products` table and an admin user in `users` table.
+- `product` folder: included uploaded images for the sample products. This folder should match value from `PRODUCT_IMAGE_PATH`
 
 # Additional features:
 ## Email verification
 In `.env` file, 
 1. Replace `MAIL_DSN` with your mailer URL. 
 2. Set `MAILER_ENABLED` = `true`
-3. Customize `MAILER_SENDER_EMAIL` and `MAILER_SENDER_NAME`
+3. Customize the `MAILER_SENDER_EMAIL` and `MAILER_SENDER_NAME` to show who is sending the verification email. 
